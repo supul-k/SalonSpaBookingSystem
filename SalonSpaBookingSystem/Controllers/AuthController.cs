@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using SalonSpaBookingSystem.DTO;
 using SalonSpaBookingSystem.Interfaces.IServices;
 
@@ -44,5 +45,36 @@ namespace SalonSpaBookingSystem.Controllers
             }
         }
 
+        [HttpPost("login", Name = "SignIn")]
+        public async Task<IActionResult> SignIn([FromBody] UserSignInRequestDTO request)
+        {
+            var userData = await _authService.UserExist(request.Email);
+            if (!userData.Status)
+            {
+                return BadRequest(userData);
+            }
+
+            // Cast the data to UserResponseDTO
+            var userResponseData = (UserResponseDTO)userData.Data;
+
+            var result = await _authService.SignInAsync(request, userResponseData.UserName);
+            if (!result.Status)
+            {
+                return BadRequest(result);
+            }
+ 
+            var tokenResult = await _authService.GenerateJwtToken(userResponseData);
+            if (!tokenResult.Status)
+            {
+                return BadRequest(tokenResult);
+            }
+
+            return Ok(new
+            {
+                Success = true,
+                result.Message,
+                Token = tokenResult.Message
+            });
+        }
     }
 }

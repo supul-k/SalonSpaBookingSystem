@@ -1,7 +1,7 @@
 ﻿using SalonSpaBookingSystem.DTO.InternalDTO;
 using SalonSpaBookingSystem.Models;
 
-namespace SalonSpaBookingSystem.Interfaces.IRepositories
+namespace SalonSpaBookingSystem.Interfaces.IServices
 {
     public interface IUserProfileService
     {

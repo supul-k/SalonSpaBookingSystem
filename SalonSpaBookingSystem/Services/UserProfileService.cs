@@ -1,5 +1,6 @@
 ﻿using SalonSpaBookingSystem.DTO.InternalDTO;
 using SalonSpaBookingSystem.Interfaces.IRepositories;
+using SalonSpaBookingSystem.Interfaces.IServices;
 using SalonSpaBookingSystem.Models;
 
 namespace SalonSpaBookingSystem.Services

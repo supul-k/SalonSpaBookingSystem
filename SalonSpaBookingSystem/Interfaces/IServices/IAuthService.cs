@@ -10,5 +10,9 @@ namespace SalonSpaBookingSystem.Interfaces.IServices
         public Task<GeneralResponseInternalDTO> UserExist(string Email);
 
         public Task<GeneralResponseInternalDTO> RoleExist(string Role);
+
+        public Task<GeneralResponseInternalDTO> SignInAsync(UserSignInRequestDTO userSignInRequest, string UserName);
+
+        public Task<GeneralResponseInternalDTO> GenerateJwtToken(UserResponseDTO userData);
     }
 }

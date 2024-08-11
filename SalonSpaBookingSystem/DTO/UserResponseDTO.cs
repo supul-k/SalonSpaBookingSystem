@@ -3,7 +3,7 @@
 namespace SalonSpaBookingSystem.DTO
 {
     public class UserResponseDTO
-    {
+    {        
         public string Id { get; set; }
         public string FirstName { get; set; }
 
@@ -14,6 +14,8 @@ namespace SalonSpaBookingSystem.DTO
         public string Email { get; set; }
 
         public string PhoneNumber { get; set; }
+
+        public string Role { get; set; }
 
     }
 }
