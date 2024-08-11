@@ -34,18 +34,17 @@ builder.Services.AddIdentity<UserModel, IdentityRole>()
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Password settings
-
-    //options.Password.RequireDigit = true;
+    options.Password.RequireDigit = false;
     options.Password.RequiredLength = 6;
-    //options.Password.RequireNonAlphanumeric = false;
-    //options.Password.RequireUppercase = true;
-    //options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
 
     // Lockout settings
 
-    //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-    //options.Lockout.MaxFailedAccessAttempts = 5;
-    //options.Lockout.AllowedForNewUsers = true;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 20;
+    options.Lockout.AllowedForNewUsers = false;
 
     // User settings
     options.User.RequireUniqueEmail = true;
@@ -66,6 +65,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IValidationService, ValidationService>();
 builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
 //jwt configurations
 //var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();

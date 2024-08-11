@@ -2,6 +2,7 @@
 using SalonSpaBookingSystem.DatabaseAccess;
 using SalonSpaBookingSystem.DTO;
 using SalonSpaBookingSystem.DTO.InternalDTO;
+using SalonSpaBookingSystem.Interfaces.IRepositories;
 using SalonSpaBookingSystem.Interfaces.IServices;
 using SalonSpaBookingSystem.Models;
 
@@ -10,12 +11,19 @@ public class AuthService : IAuthService
     private readonly UserManager<UserModel> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly ApplicationDbContext _dbContext;
+    private readonly IAuthRepository _authRepository;
 
-    public AuthService(UserManager<UserModel> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext dbContext)
+    public AuthService(
+        UserManager<UserModel> userManager, 
+        RoleManager<IdentityRole> roleManager, 
+        ApplicationDbContext dbContext,
+        IAuthRepository authRepository
+        )
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _dbContext = dbContext;
+        _authRepository = authRepository;
     }
 
     public async Task<GeneralResponseInternalDTO> RegisterUserWithRoleAsync(UserRegisterRequestDTO registerRequest)
@@ -32,24 +40,22 @@ public class AuthService : IAuthService
                     UserName = registerRequest.UserName,
                     Email = registerRequest.Email,
                     PhoneNumber = registerRequest.PhoneNumber,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
                 };
 
-                var result = await _userManager.CreateAsync(user, registerRequest.Password);
-                if (!result.Succeeded)
+                //create User
+                var result = await _authRepository.CreateUserAsync(user, registerRequest.Password);
+                if (!result.Status)
                 {
-                    return new GeneralResponseInternalDTO(false, "User Registration Failed");
+                    return result;
                 }
 
                 // Assign role
-                if (!await _roleManager.RoleExistsAsync(registerRequest.Role))
+                var roleResult = await _authRepository.AssignRolesAsync(user, registerRequest.Role);
+                if (!roleResult.Status)
                 {
-                    await _roleManager.CreateAsync(new IdentityRole(registerRequest.Role));
-                }
-
-                var roleResult = await _userManager.AddToRoleAsync(user, registerRequest.Role);
-                if (!roleResult.Succeeded)
-                {
-                    return new GeneralResponseInternalDTO(false, "User Role creation Failed");
+                    return result;
                 }
 
                 // Commit transaction
@@ -57,12 +63,38 @@ public class AuthService : IAuthService
 
                 return new GeneralResponseInternalDTO(true, "User Created Successfully");
             }
-            catch
+            catch (Exception ex)
             {
                 // Rollback transaction
                 await transaction.RollbackAsync();
-                throw;
+                return new GeneralResponseInternalDTO(false, ex.Message);
             }
+        }
+    }
+
+    public async Task<GeneralResponseInternalDTO> UserExist(string Email)
+    {
+        try
+        {
+            var result = await _authRepository.UserExist(Email);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return new GeneralResponseInternalDTO(false, ex.Message);
+        }
+    }
+
+    public async Task<GeneralResponseInternalDTO> RoleExist(string Role)
+    {
+        try
+        {
+            var result = await _authRepository.RoleExist(Role);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return new GeneralResponseInternalDTO(false, ex.Message);
         }
     }
 }

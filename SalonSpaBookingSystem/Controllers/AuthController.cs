@@ -4,16 +4,19 @@ using SalonSpaBookingSystem.Interfaces.IServices;
 
 namespace SalonSpaBookingSystem.Controllers
 {
+
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
 
         private readonly IAuthService _authService;
+        private readonly IValidationService _validationService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IValidationService validationService)
         {
             _authService = authService;
+            _validationService = validationService;
         }
 
         [HttpPost("register", Name = "RegisterUser")]
@@ -21,6 +24,12 @@ namespace SalonSpaBookingSystem.Controllers
         {
             try
             {
+                var roleExist = await _authService.RoleExist(request.Role);
+                if (!roleExist.Status)
+                {
+                    return BadRequest(roleExist);
+                }
+
                 var result = await _authService.RegisterUserWithRoleAsync(request);
                 if (!result.Status)
                 {
