@@ -1,4 +1,5 @@
-﻿using SalonSpaBookingSystem.DTO.InternalDTO;
+﻿using SalonSpaBookingSystem.DTO;
+using SalonSpaBookingSystem.DTO.InternalDTO;
 using SalonSpaBookingSystem.Models;
 
 namespace SalonSpaBookingSystem.Interfaces.IRepositories
@@ -12,5 +13,7 @@ namespace SalonSpaBookingSystem.Interfaces.IRepositories
         public Task<GeneralResponseInternalDTO> AssignRolesAsync(UserModel user, string Role);
 
         public Task<GeneralResponseInternalDTO> RoleExist(string Role);
+
+        public Task<GeneralResponseInternalDTO> SignInAsync(UserSignInRequestDTO userSignInRequest, string UserName);
     }
 }

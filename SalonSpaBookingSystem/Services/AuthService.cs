@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using SalonSpaBookingSystem.DatabaseAccess;
+﻿using SalonSpaBookingSystem.DatabaseAccess;
 using SalonSpaBookingSystem.DTO;
 using SalonSpaBookingSystem.DTO.InternalDTO;
 using SalonSpaBookingSystem.Interfaces.IRepositories;
@@ -8,22 +7,19 @@ using SalonSpaBookingSystem.Models;
 
 public class AuthService : IAuthService
 {
-    private readonly UserManager<UserModel> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
     private readonly ApplicationDbContext _dbContext;
     private readonly IAuthRepository _authRepository;
+    private readonly IJWTService _jwtService;
 
     public AuthService(
-        UserManager<UserModel> userManager, 
-        RoleManager<IdentityRole> roleManager, 
         ApplicationDbContext dbContext,
-        IAuthRepository authRepository
+        IAuthRepository authRepository,
+        IJWTService jWTService
         )
     {
-        _userManager = userManager;
-        _roleManager = roleManager;
         _dbContext = dbContext;
         _authRepository = authRepository;
+        _jwtService = jWTService;
     }
 
     public async Task<GeneralResponseInternalDTO> RegisterUserWithRoleAsync(UserRegisterRequestDTO registerRequest)
@@ -90,6 +86,32 @@ public class AuthService : IAuthService
         try
         {
             var result = await _authRepository.RoleExist(Role);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return new GeneralResponseInternalDTO(false, ex.Message);
+        }
+    }
+
+    public async Task<GeneralResponseInternalDTO> SignInAsync(UserSignInRequestDTO userSignInRequest, string UserName)
+    {
+        try
+        {
+            var result = await _authRepository.SignInAsync(userSignInRequest, UserName);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return new GeneralResponseInternalDTO(false, ex.Message);
+        }
+    }
+
+    public async Task<GeneralResponseInternalDTO> GenerateJwtToken(UserResponseDTO userData)
+    {
+        try
+        {
+            var result = await _jwtService.GenerateJwtToken(userData);
             return result;
         }
         catch (Exception ex)

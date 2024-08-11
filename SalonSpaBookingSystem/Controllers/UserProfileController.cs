@@ -1,8 +1,8 @@
 ﻿using SalonSpaBookingSystem.DTO;
 using SalonSpaBookingSystem.DTO.InternalDTO;
-using SalonSpaBookingSystem.Interfaces.IRepositories;
 using SalonSpaBookingSystem.Models;
 using Microsoft.AspNetCore.Mvc;
+using SalonSpaBookingSystem.Interfaces.IServices;
 
 namespace SalonSpaBookingSystem.Controllers
 {
