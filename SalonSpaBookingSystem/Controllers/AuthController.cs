@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SalonSpaBookingSystem.DTO;
 using SalonSpaBookingSystem.Interfaces.IServices;
 
@@ -7,17 +6,15 @@ namespace SalonSpaBookingSystem.Controllers
 {
 
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]")]    
     public class AuthController : ControllerBase
     {
 
         private readonly IAuthService _authService;
-        private readonly IValidationService _validationService;
 
-        public AuthController(IAuthService authService, IValidationService validationService)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
-            _validationService = validationService;
         }
 
         [HttpPost("register", Name = "RegisterUser")]

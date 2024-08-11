@@ -3,11 +3,13 @@ using SalonSpaBookingSystem.DTO.InternalDTO;
 using SalonSpaBookingSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using SalonSpaBookingSystem.Interfaces.IServices;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SalonSpaBookingSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserProfileController : ControllerBase
     {
         private readonly IUserProfileService _userProfileService;
