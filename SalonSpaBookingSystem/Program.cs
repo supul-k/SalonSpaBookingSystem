@@ -96,6 +96,8 @@ builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IJWTService, JWTService>();
+builder.Services.AddScoped<ISalonSpaRepository, SalonSpaRepository>();
+builder.Services.AddScoped<ISalonSpaService, SalonSpaService>();
 
 //jwt configurations
 var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
