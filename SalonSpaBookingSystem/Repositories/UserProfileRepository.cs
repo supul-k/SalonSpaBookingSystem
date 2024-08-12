@@ -56,8 +56,7 @@ namespace SalonSpaBookingSystem.Repositories
                 _context.UserProfiles.Update(userProfile);
                 await _context.SaveChangesAsync();
 
-                var response = new GeneralResponseInternalDTO(true, "User Profile Updated Successfully");
-                return response;
+                return new GeneralResponseInternalDTO(true, "User Profile Updated Successfully");
             }
             catch (Exception ex)
             {

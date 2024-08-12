@@ -82,13 +82,6 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.SignIn.RequireConfirmedEmail = false;
 });
 
-// Add authorization policies if needed
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
-    options.AddPolicy("RequireSalonOwnerRole", policy => policy.RequireRole("SalonOwner"));
-});
-
 //Dependency Injection( Register Services and repositories)
 builder.Services.AddScoped<IValidationService, ValidationService>();
 builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
@@ -118,6 +111,14 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = jwtIssuer,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
     };
+});
+
+// Add authorization policies if needed
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("RequireSalonOwnerRole", policy => policy.RequireRole("SalonOwner"));
+    options.AddPolicy("RequireAdminOrSalonOwnerRole", policy => policy.RequireRole("Admin", "SalonOwner"));
 });
 
 var app = builder.Build();
