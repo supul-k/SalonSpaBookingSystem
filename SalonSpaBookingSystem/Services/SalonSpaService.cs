@@ -39,5 +39,57 @@ namespace SalonSpaBookingSystem.Services
                 return new GeneralResponseInternalDTO(false, ex.Message);
             }
         }
+
+        public async Task<GeneralResponseInternalDTO> FindSalonSpa(string SalonSpaId)
+        {
+            try
+            {
+                var result = await _salonSpaRepository.FindSalonSpa(SalonSpaId);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponseInternalDTO(false, ex.Message);
+            }
+        }
+
+        public async Task<GeneralResponseInternalDTO> UpdateSalonSpa(SalonSpaModel salonSpa)
+        {
+            try
+            {
+                var result = await _salonSpaRepository.UpdateSalonSpa(salonSpa);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponseInternalDTO(false, ex.Message);
+            }
+        }
+
+        public async Task<GeneralResponseInternalDTO> DeleteSalonSpa(SalonSpaModel salonSpa)
+        {
+            try
+            {
+                var result = await _salonSpaRepository.DeleteSalonSpa(salonSpa);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponseInternalDTO(false, ex.Message);
+            }
+        }
+
+        public async Task<GeneralResponseInternalDTO> FetchAllSalonSpas()
+        {
+            try
+            {
+                var result = await _salonSpaRepository.FetchAllSalonSpas();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponseInternalDTO(false, ex.Message);
+            }
+        }
     }
 }

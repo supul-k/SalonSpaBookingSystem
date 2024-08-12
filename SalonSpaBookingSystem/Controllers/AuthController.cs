@@ -45,33 +45,40 @@ namespace SalonSpaBookingSystem.Controllers
         [HttpPost("login", Name = "SignIn")]
         public async Task<IActionResult> SignIn([FromBody] UserSignInRequestDTO request)
         {
-            var userData = await _authService.UserExist(request.Email);
-            if (!userData.Status)
+            try
             {
-                return BadRequest(userData);
-            }
+                var userData = await _authService.UserExist(request.Email);
+                if (!userData.Status)
+                {
+                    return BadRequest(userData);
+                }
 
-            // Cast the data to UserResponseDTO
-            var userResponseData = (UserResponseDTO)userData.Data;
+                // Cast the data to UserResponseDTO
+                var userResponseData = (UserResponseDTO)userData.Data;
 
-            var result = await _authService.SignInAsync(request, userResponseData.UserName);
-            if (!result.Status)
-            {
-                return BadRequest(result);
-            }
- 
-            var tokenResult = await _authService.GenerateJwtToken(userResponseData);
-            if (!tokenResult.Status)
-            {
-                return BadRequest(tokenResult);
-            }
+                var result = await _authService.SignInAsync(request, userResponseData.UserName);
+                if (!result.Status)
+                {
+                    return BadRequest(result);
+                }
 
-            return Ok(new
+                var tokenResult = await _authService.GenerateJwtToken(userResponseData);
+                if (!tokenResult.Status)
+                {
+                    return BadRequest(tokenResult);
+                }
+
+                return Ok(new
+                {
+                    Success = true,
+                    result.Message,
+                    Token = tokenResult.Message
+                });
+            }    
+            catch (Exception ex)
             {
-                Success = true,
-                result.Message,
-                Token = tokenResult.Message
-            });
+                return BadRequest(new GeneralResposnseDTO(false, ex.Message));
+            }
         }
     }
 }

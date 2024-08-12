@@ -38,10 +38,76 @@ namespace SalonSpaBookingSystem.Repositories
                 var result =  await _context.SalonSpas.FirstOrDefaultAsync(ss => ss.Email == Email);
                 if (result == null)
                 {
-                    return new GeneralResponseInternalDTO(false, "Salon|Spa does not exist");
+                    return new GeneralResponseInternalDTO(false, "Salon|Spa not found");
                 }
 
-                return new GeneralResponseInternalDTO(true, "Email already Exist with a Salon|Spa", result);
+                return new GeneralResponseInternalDTO(true, "Salon|Spa found wiht the attached Email", result);
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponseInternalDTO(false, ex.Message);
+            }
+        }
+
+        public async Task<GeneralResponseInternalDTO> FindSalonSpa(string SalonSpaId)
+        {
+            try
+            {
+                var result = await _context.SalonSpas.FindAsync(SalonSpaId);
+                if (result == null)
+                {
+                    return new GeneralResponseInternalDTO(false, "Salon|Spa not found");
+                }
+
+                return new GeneralResponseInternalDTO(true, "Salon|Spa found", result);
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponseInternalDTO(false, ex.Message);
+            }
+        }
+
+        public async Task<GeneralResponseInternalDTO> UpdateSalonSpa(SalonSpaModel salonSpa)
+        {
+            try
+            {
+                _context.SalonSpas.Update(salonSpa);
+                await _context.SaveChangesAsync();
+
+                return new GeneralResponseInternalDTO(true, "Salon|Spa updated successfully");
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponseInternalDTO(false, ex.Message);
+            }
+        }
+
+        public async Task<GeneralResponseInternalDTO> DeleteSalonSpa(SalonSpaModel salonSpa)
+        {
+            try
+            {
+                _context.SalonSpas.Remove(salonSpa);
+                await _context.SaveChangesAsync();
+
+                return new GeneralResponseInternalDTO(true, "Salon|Spa deleted successfully");
+            }
+            catch(Exception ex)
+            {
+                return new GeneralResponseInternalDTO(false, ex.Message);
+            }
+        }
+
+        public async Task<GeneralResponseInternalDTO> FetchAllSalonSpas()
+        {
+            try
+            {
+                var result = await _context.SalonSpas.ToListAsync();
+                if (!result.Any())
+                {
+                    return new GeneralResponseInternalDTO(false, "Salon|Spas not found");
+                }
+
+                return new GeneralResponseInternalDTO(true, "Salon|Spas found", result);
             }
             catch (Exception ex)
             {
