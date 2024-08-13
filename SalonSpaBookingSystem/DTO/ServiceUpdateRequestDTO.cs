@@ -5,7 +5,7 @@ namespace SalonSpaBookingSystem.DTO
     public class ServiceUpdateRequestDTO
     {
         [Required]
-        public string? ServiceId { get; set; }
+        public string ServiceId { get; set; }
 
         public string? Name { get; set; }
 

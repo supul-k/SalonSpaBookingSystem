@@ -7,7 +7,9 @@ namespace SalonSpaBookingSystem.Interfaces.IServices
     {
         public Task<GeneralResponseInternalDTO> CreateService(ServiceModel service);
 
-        public Task<GeneralResponseInternalDTO> ServiceExist(string serviceId);
+        public Task<GeneralResponseInternalDTO> FetchServiceById(string serviceId);
+
+        public Task<GeneralResponseInternalDTO> FetchServiceByName(string name);
 
         public Task<GeneralResponseInternalDTO> UpdateService(ServiceModel service);
 
