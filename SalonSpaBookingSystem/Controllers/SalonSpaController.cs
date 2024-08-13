@@ -25,77 +25,91 @@ namespace SalonSpaBookingSystem.Controllers
         [HttpPost("create-salonspa", Name = "CreateSalonSpa")]
         public async Task<IActionResult> CreateSalonSpa([FromBody] SalonSpaCreateRequestDTO request)
         {
-            var validateEmail = await _validationService.ValidateEmail(request.Email);
-            if (!validateEmail.Status)
+            try
             {
-                return BadRequest(validateEmail);
-            }
+                var validateEmail = await _validationService.ValidateEmail(request.Email);
+                if (!validateEmail.Status)
+                {
+                    return BadRequest(validateEmail);
+                }
 
-            var salonSpaExist = await _salonSpaService.SalonSpaExist(request.Email);
-            if (salonSpaExist.Status)
+                var salonSpaExist = await _salonSpaService.SalonSpaExist(request.Email);
+                if (salonSpaExist.Status)
+                {
+                    return BadRequest(new { success = false, message = "Email already exists with a Salon|Spa" });
+                }
+
+                SalonSpaModel salonSpa = new SalonSpaModel();
+
+                salonSpa.SalonSpaId = Guid.NewGuid().ToString();
+                salonSpa.SalonOwnerId = request.SalonOwnerId;
+                salonSpa.Email = request.Email;
+                salonSpa.Name = request.Name;
+                salonSpa.Description = request.Description;
+                salonSpa.Address = request.Address;
+                salonSpa.City = request.City;
+                salonSpa.State = request.State;
+                salonSpa.ZipCode = request.ZipCode;
+                salonSpa.Country = request.Country;
+                salonSpa.PhoneNumber = request.PhoneNumber;
+                salonSpa.CreatedAt = DateTime.UtcNow;
+                salonSpa.UpdatedAt = DateTime.UtcNow;
+
+                var result = await _salonSpaService.CreateSalonSpa(salonSpa);
+                if (!result.Status)
+                {
+                    return BadRequest(result);
+                }
+
+                return Created(string.Empty, result);
+            }
+            catch (Exception ex)
             {
-                return BadRequest(new { success = false, message = "Email already exists with a Salon|Spa" });
+                return BadRequest(new GeneralResposnseDTO(false, ex.Message));
             }
-
-            SalonSpaModel salonSpa = new SalonSpaModel();
-            
-            salonSpa.SalonSpaId = Guid.NewGuid().ToString();
-            salonSpa.SalonOwnerId = request.SalonOwnerId;
-            salonSpa.Email = request.Email;
-            salonSpa.Name = request.Name;
-            salonSpa.Description = request.Description;
-            salonSpa.Address = request.Address;
-            salonSpa.City = request.City;
-            salonSpa.State = request.State;
-            salonSpa.ZipCode = request.ZipCode;
-            salonSpa.Country = request.Country;
-            salonSpa.PhoneNumber = request.PhoneNumber;
-            salonSpa.CreatedAt = DateTime.UtcNow;
-            salonSpa.UpdatedAt = DateTime.UtcNow;
-
-            var result = await _salonSpaService.CreateSalonSpa(salonSpa);
-            if (!result.Status)
-            {
-                return BadRequest(result);
-            }
-
-            return Created(string.Empty, result);
         }
 
         [Authorize(Policy = "RequireAdminOrSalonOwnerRole")]
         [HttpPut("update-salonspa", Name = "UpdateSalonSpa")]
         public async Task<IActionResult> UpdateSalonSpa([FromBody] SalonSpaUpdateRequestDTO request)
         {
-            var salonSpaResult = await _salonSpaService.FindSalonSpa(request.SalonSpaId);
-            if (!salonSpaResult.Status)
+            try
             {
-                return BadRequest(salonSpaResult);
-            }
+                var salonSpaResult = await _salonSpaService.FindSalonSpa(request.SalonSpaId);
+                if (!salonSpaResult.Status)
+                {
+                    return BadRequest(salonSpaResult);
+                }
 
-            SalonSpaModel salonSpa = salonSpaResult.Data as SalonSpaModel;
-            if (salonSpa == null)
+                SalonSpaModel salonSpa = salonSpaResult.Data as SalonSpaModel;
+                if (salonSpa == null)
+                {
+                    return BadRequest(new GeneralResponseInternalDTO(false, "Error processing Salon Spa data."));
+                }
+
+                if (!string.IsNullOrEmpty(request.Name)) salonSpa.Name = request.Name;
+                if (!string.IsNullOrEmpty(request.Description)) salonSpa.Description = request.Description;
+                if (!string.IsNullOrEmpty(request.Address)) salonSpa.Address = request.Address;
+                if (!string.IsNullOrEmpty(request.City)) salonSpa.City = request.City;
+                if (!string.IsNullOrEmpty(request.State)) salonSpa.State = request.State;
+                if (!string.IsNullOrEmpty(request.ZipCode)) salonSpa.ZipCode = request.ZipCode;
+                if (!string.IsNullOrEmpty(request.Country)) salonSpa.Country = request.Country;
+                if (!string.IsNullOrEmpty(request.PhoneNumber)) salonSpa.PhoneNumber = request.PhoneNumber;
+                if (!string.IsNullOrEmpty(request.Email)) salonSpa.Email = request.Email;
+                salonSpa.UpdatedAt = DateTime.UtcNow;
+
+                var result = await _salonSpaService.UpdateSalonSpa(salonSpa);
+                if (result.Status)
+                {
+                    return BadRequest(result);
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
             {
-                return BadRequest(new GeneralResponseInternalDTO(false, "Error processing Salon Spa data."));
+                return BadRequest(new GeneralResposnseDTO(false, ex.Message));
             }
-
-            if (!string.IsNullOrEmpty(request.Name)) salonSpa.Name = request.Name;
-            if (!string.IsNullOrEmpty(request.Description)) salonSpa.Description = request.Description;
-            if (!string.IsNullOrEmpty(request.Address)) salonSpa.Address = request.Address;
-            if (!string.IsNullOrEmpty(request.City)) salonSpa.City = request.City;
-            if (!string.IsNullOrEmpty(request.State)) salonSpa.State = request.State;
-            if (!string.IsNullOrEmpty(request.ZipCode)) salonSpa.ZipCode = request.ZipCode;
-            if (!string.IsNullOrEmpty(request.Country)) salonSpa.Country = request.Country;
-            if (!string.IsNullOrEmpty(request.PhoneNumber)) salonSpa.PhoneNumber = request.PhoneNumber;
-            if (!string.IsNullOrEmpty(request.Email)) salonSpa.Email = request.Email;
-            salonSpa.UpdatedAt = DateTime.UtcNow;
-
-            var result = await _salonSpaService.UpdateSalonSpa(salonSpa);
-            if (result.Status)
-            {
-                return BadRequest(result);
-            }
-
-            return Ok(result);
         }
 
         [Authorize(Policy = "RequireAdminRole")]
@@ -110,7 +124,7 @@ namespace SalonSpaBookingSystem.Controllers
                     return BadRequest(salonSpaResult);
                 }
 
-                var salonSpa = (SalonSpaModel)salonSpaResult.Data;
+                var salonSpa = salonSpaResult.Data as SalonSpaModel;
 
                 var result = await _salonSpaService.DeleteSalonSpa(salonSpa);
                 if (!result.Status)

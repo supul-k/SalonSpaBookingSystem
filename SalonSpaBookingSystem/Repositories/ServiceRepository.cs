@@ -30,7 +30,25 @@ namespace SalonSpaBookingSystem.Repositories
             }
         }
 
-        public async Task<GeneralResponseInternalDTO> ServiceExist(string serviceId)
+        public async Task<GeneralResponseInternalDTO> FetchServiceByName(string name)
+        {
+            try
+            {
+                var result = await _context.Services.FirstOrDefaultAsync(s => s.Name == name);
+                if (result == null)
+                {
+                    return new GeneralResponseInternalDTO(false, "Service not found");
+                }
+
+                return new GeneralResponseInternalDTO(true, "Service found", result);
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponseInternalDTO(false, ex.Message);
+            }
+        }
+
+        public async Task<GeneralResponseInternalDTO> FetchServiceById(string serviceId)
         {
             try
             {

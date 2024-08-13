@@ -28,11 +28,24 @@ namespace SalonSpaBookingSystem.Services
             }
         }
 
-        public async Task<GeneralResponseInternalDTO> ServiceExist(string serviceId)
+        public async Task<GeneralResponseInternalDTO> FetchServiceById(string serviceId)
         {
             try
             {
-                var result = await _serviceRepository.ServiceExist(serviceId);
+                var result = await _serviceRepository.FetchServiceById(serviceId);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponseInternalDTO(false, ex.Message);
+            }
+        }
+
+        public async Task<GeneralResponseInternalDTO> FetchServiceByName(string name)
+        {
+            try
+            {
+                var result = await _serviceRepository.FetchServiceByName(name);
                 return result;
             }
             catch (Exception ex)
