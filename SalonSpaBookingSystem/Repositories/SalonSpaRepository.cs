@@ -41,7 +41,7 @@ namespace SalonSpaBookingSystem.Repositories
                     return new GeneralResponseInternalDTO(false, "Salon|Spa not found");
                 }
 
-                return new GeneralResponseInternalDTO(true, "Salon|Spa found wiht the attached Email", result);
+                return new GeneralResponseInternalDTO(true, "Salon|Spa found with the attached Email", result);
             }
             catch (Exception ex)
             {

@@ -93,6 +93,8 @@ builder.Services.AddScoped<ISalonSpaRepository, SalonSpaRepository>();
 builder.Services.AddScoped<ISalonSpaService, SalonSpaService>();
 builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 builder.Services.AddScoped<IServiceService, ServiceService>();
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+builder.Services.AddScoped<IBookingService, BookingService>();
 
 //jwt configurations
 var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
