@@ -28,7 +28,7 @@ namespace SalonSpaBookingSystem.Models
 
         [Required]
         [Column("BookingTime")]
-        public TimeSpan BookingTime { get; set; }
+        public DateTime BookingTime { get; set; }
 
         [Required]
         [Column("Status", TypeName = "nvarchar(50)")]
