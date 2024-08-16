@@ -91,5 +91,18 @@ namespace SalonSpaBookingSystem.Services
                 return new GeneralResponseInternalDTO(false, ex.Message);
             }
         }
+
+        public async Task<GeneralResponseInternalDTO> IsBookingTimeAvailable(string salonSpaId, DateOnly bookingDate, TimeSpan bookingTime)
+        {
+            try
+            {
+                var result = await _bookingRepository.IsBookingTimeAvailable(salonSpaId, bookingDate, bookingTime);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponseInternalDTO(false, ex.Message);
+            }
+        }
     }
 }

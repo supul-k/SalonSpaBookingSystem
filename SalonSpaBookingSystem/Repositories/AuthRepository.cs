@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.EntityFrameworkCore;
 using SalonSpaBookingSystem.DatabaseAccess;
 using SalonSpaBookingSystem.DTO;
 using SalonSpaBookingSystem.DTO.InternalDTO;
@@ -70,7 +71,25 @@ namespace SalonSpaBookingSystem.Repositories
                     return new GeneralResponseInternalDTO(false, ex.Message);
                 }
             }            
-        }        
+        }
+
+        public async Task<GeneralResponseInternalDTO> FindUser(string userId)
+        {
+            try
+            {
+                var result = await _userManager.FindByIdAsync(userId);
+                if (result == null)
+                {
+                    return new GeneralResponseInternalDTO(false, "User not found");
+                }
+
+                return new GeneralResponseInternalDTO(true, "User found", result);
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponseInternalDTO(false, ex.Message);
+            }
+        }
 
         public async Task<GeneralResponseInternalDTO> CreateUserAsync(UserModel user, string Password)
         {

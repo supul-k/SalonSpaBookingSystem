@@ -7,6 +7,8 @@ namespace SalonSpaBookingSystem.Interfaces.IServices
     {
         public Task<GeneralResponseInternalDTO> RegisterUserWithRoleAsync(UserRegisterRequestDTO registerRequest);
 
+        public Task<GeneralResponseInternalDTO> FindUser(string userId);
+
         public Task<GeneralResponseInternalDTO> UserExist(string Email);
 
         public Task<GeneralResponseInternalDTO> RoleExist(string Role);

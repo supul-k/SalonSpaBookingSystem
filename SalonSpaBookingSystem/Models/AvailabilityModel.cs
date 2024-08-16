@@ -16,7 +16,7 @@ namespace SalonSpaBookingSystem.Models
 
         [Required]
         [Column("Date")]
-        public DateTime Date { get; set; }
+        public DateOnly Date { get; set; }
 
         [Required]
         [Column("StartTime")]

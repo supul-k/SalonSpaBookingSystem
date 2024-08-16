@@ -16,5 +16,7 @@ namespace SalonSpaBookingSystem.Interfaces.IServices
         public Task<GeneralResponseInternalDTO> FetchBookings();
 
         public Task<GeneralResponseInternalDTO> FetchBookingsByUserId(string userId);
+
+        public Task<GeneralResponseInternalDTO> IsBookingTimeAvailable(string salonSpaId, DateOnly bookingDate, TimeSpan bookingTime);
     }
 }

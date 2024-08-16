@@ -68,6 +68,19 @@ public class AuthService : IAuthService
         }
     }
 
+    public async Task<GeneralResponseInternalDTO> FindUser(string userId)
+    {
+        try
+        {
+            var result = await _authRepository.FindUser(userId);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return new GeneralResponseInternalDTO(false, ex.Message);
+        }
+    }
+
     public async Task<GeneralResponseInternalDTO> UserExist(string Email)
     {
         try

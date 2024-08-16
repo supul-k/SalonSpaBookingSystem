@@ -114,5 +114,26 @@ namespace SalonSpaBookingSystem.Repositories
                 return new GeneralResponseInternalDTO(false, ex.Message);
             }
         }
+
+        public async Task<GeneralResponseInternalDTO> IsBookingTimeAvailable(string salonSpaId, DateOnly bookingDate, TimeSpan bookingTime)
+        {
+            try
+            {
+                bool available = await _context.Bookings
+                    .AnyAsync(b => b.SalonSpaId == salonSpaId &&
+                                b.BookingDate == bookingDate &&
+                                b.BookingTime == bookingTime);
+                if (available)
+                {
+                    return new GeneralResponseInternalDTO(false, "The selected time slot is not available.");
+                }
+
+                return new GeneralResponseInternalDTO(true, "The time slot is available.");
+            }
+            catch (Exception ex)
+            {
+                return new GeneralResponseInternalDTO(false, ex.Message);
+            }
+        }
     }
 }
