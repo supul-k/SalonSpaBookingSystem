@@ -24,11 +24,11 @@ namespace SalonSpaBookingSystem.Models
 
         [Required]
         [Column("BookingDate")]
-        public DateTime BookingDate { get; set; }
+        public DateOnly BookingDate { get; set; }
 
         [Required]
         [Column("BookingTime")]
-        public DateTime BookingTime { get; set; }
+        public TimeSpan BookingTime { get; set; }
 
         [Required]
         [Column("Status", TypeName = "nvarchar(50)")]

@@ -7,10 +7,10 @@ namespace SalonSpaBookingSystem.Interfaces.IServices
     {
         public Task<GeneralResponseInternalDTO> CreateAvailability(AvailabilityModel availability);
 
-        public Task<GeneralResponseInternalDTO> CheckAvailability(string salonSpaId, DateTime date);
+        public Task<GeneralResponseInternalDTO> CheckAvailability(string salonSpaId, DateOnly date);
 
         public Task<GeneralResponseInternalDTO> FetchAvailabilitiesBySalonSpaId(string salonSpaId);
 
-        public Task<GeneralResponseInternalDTO> CheckTimeAvailability(string salonSpaId, DateTime date, TimeSpan startTime, TimeSpan endTime);
+        public Task<GeneralResponseInternalDTO> CheckTimeAvailability(string salonSpaId, DateOnly date, TimeSpan startTime, TimeSpan endTime);
     }
 }

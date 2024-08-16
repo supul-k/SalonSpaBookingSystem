@@ -30,7 +30,7 @@ namespace SalonSpaBookingSystem.Repositories
             }
         }
 
-        public async Task<GeneralResponseInternalDTO> CheckAvailability(string salonSpaId,DateTime date)
+        public async Task<GeneralResponseInternalDTO> CheckAvailability(string salonSpaId,DateOnly date)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace SalonSpaBookingSystem.Repositories
             }
         }
 
-        public async Task<GeneralResponseInternalDTO> CheckTimeAvailability(string salonSpaId, DateTime date, TimeSpan startTime, TimeSpan endTime)
+        public async Task<GeneralResponseInternalDTO> CheckTimeAvailability(string salonSpaId, DateOnly date, TimeSpan startTime, TimeSpan endTime)
         {
             try
             {

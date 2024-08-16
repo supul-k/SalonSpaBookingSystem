@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SalonSpaBookingSystem.DatabaseAccess;
 
@@ -11,9 +12,11 @@ using SalonSpaBookingSystem.DatabaseAccess;
 namespace SalonSpaBookingSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240816131341_UpdateBookingModelAgain")]
+    partial class UpdateBookingModelAgain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,8 +168,8 @@ namespace SalonSpaBookingSystem.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnName("CreatedAt");
 
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date")
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2")
                         .HasColumnName("Date");
 
                     b.Property<TimeSpan>("EndTime")
@@ -199,8 +202,8 @@ namespace SalonSpaBookingSystem.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("BookingId");
 
-                    b.Property<DateOnly>("BookingDate")
-                        .HasColumnType("date")
+                    b.Property<DateTime>("BookingDate")
+                        .HasColumnType("datetime2")
                         .HasColumnName("BookingDate");
 
                     b.Property<TimeSpan>("BookingTime")

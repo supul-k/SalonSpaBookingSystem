@@ -5,6 +5,7 @@ using SalonSpaBookingSystem.DTO;
 using SalonSpaBookingSystem.Interfaces.IServices;
 using SalonSpaBookingSystem.Models;
 using SalonSpaBookingSystem.Services;
+using System.Security.Claims;
 
 namespace SalonSpaBookingSystem.Controllers
 {    
@@ -14,10 +15,18 @@ namespace SalonSpaBookingSystem.Controllers
     public class BookingController : ControllerBase
     {
         private readonly IBookingService _bookingService;
+        private readonly ISalonSpaService _salonSpaService;
+        private readonly IServiceService _serviceService;
 
-        public BookingController(IBookingService bookingService)
+        public BookingController(
+            IBookingService bookingService, 
+            ISalonSpaService salonSpaService,
+            IServiceService serviceService
+            )
         {
             _bookingService = bookingService;
+            _salonSpaService = salonSpaService;
+            _serviceService = serviceService;
         }
 
         [HttpPost("create-booking", Name = "CreateBooking")]
@@ -25,9 +34,33 @@ namespace SalonSpaBookingSystem.Controllers
         {
             try
             {
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized(new GeneralResposnseDTO(false, "User not authenticated"));
+                }
+
+                var salonSpaResult = await _salonSpaService.FindSalonSpa(request.SalonSpaId);
+                if (!salonSpaResult.Status)
+                {
+                    return BadRequest(salonSpaResult);
+                }
+
+                var serviceResult = await _serviceService.FetchServiceById(request.ServiceId);
+                if (!serviceResult.Status)
+                {
+                    return BadRequest(serviceResult);
+                }
+
+                var bookingResult = await _bookingService.IsBookingTimeAvailable(request.SalonSpaId, request.BookingDate, request.BookingTime);
+                if (!bookingResult.Status)
+                {
+                    return BadRequest(bookingResult);
+                }
+
                 BookingModel booking = new BookingModel();
                 booking.BookingId = Guid.NewGuid().ToString();
-                booking.UserId = request.UserId;
+                booking.UserId = userId;
                 booking.SalonSpaId = request.SalonSpaId;
                 booking.ServiceId = request.ServiceId;
                 booking.BookingDate = request.BookingDate;

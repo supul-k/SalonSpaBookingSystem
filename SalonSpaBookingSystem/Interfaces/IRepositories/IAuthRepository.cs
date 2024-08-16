@@ -8,6 +8,8 @@ namespace SalonSpaBookingSystem.Interfaces.IRepositories
     {
         public Task<GeneralResponseInternalDTO> UserExist(string Email);
 
+        public Task<GeneralResponseInternalDTO> FindUser(string userId);
+
         public Task<GeneralResponseInternalDTO> CreateUserAsync(UserModel user, string Password);
 
         public Task<GeneralResponseInternalDTO> AssignRolesAsync(UserModel user, string Role);

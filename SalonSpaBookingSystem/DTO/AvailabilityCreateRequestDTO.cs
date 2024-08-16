@@ -5,10 +5,7 @@ namespace SalonSpaBookingSystem.DTO
     public class AvailabilityCreateRequestDTO
     {
         [Required]
-        public string SalonSpaId { get; set; }
-
-        [Required]
-        public DateTime Date { get; set; }
+        public DateOnly Date { get; set; }
 
         [Required]
         public TimeSpan StartTime { get; set; }

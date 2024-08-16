@@ -27,6 +27,7 @@ namespace SalonSpaBookingSystem.Services
 
                 var claims = new List<Claim>
                 {
+                    new (ClaimTypes.NameIdentifier, userData.Id),
                     new (ClaimTypes.Name, userData.UserName),
                     new (ClaimTypes.Email, userData.Email),
                     new (ClaimTypes.Role, userData.Role),

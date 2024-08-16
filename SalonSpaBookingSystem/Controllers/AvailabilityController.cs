@@ -21,7 +21,7 @@ namespace SalonSpaBookingSystem.Controllers
         }
 
         [HttpPost("create-availability/{salonSpaId}", Name = "CreateAvailabilityForSalonSpa")]
-        public async Task<IActionResult> CreateAvailability(AvailabilityCreateRequestDTO request, string salonSpaId)
+        public async Task<IActionResult> CreateAvailability([FromBody] AvailabilityCreateRequestDTO request, string salonSpaId)
         {
             try
             {
@@ -63,12 +63,12 @@ namespace SalonSpaBookingSystem.Controllers
         }
 
         [HttpGet("get-availabilities/{salonSpaId}", Name = "FetchAvailabilitiesForSalonSpaForDate")]
-        public async Task<IActionResult> FetchAvailabilities(string salonSpaId, [FromQuery] DateTime date)
+        public async Task<IActionResult> FetchAvailabilities(string salonSpaId, [FromQuery] DateOnly date)
         {
             try
             {
                 var result = await _availabilityService.CheckAvailability(salonSpaId, date);
-                if (result.Status)
+                if (!result.Status)
                 {
                     return BadRequest(result);
                 }

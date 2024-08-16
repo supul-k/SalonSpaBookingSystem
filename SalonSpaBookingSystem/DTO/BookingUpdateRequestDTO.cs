@@ -7,9 +7,9 @@ namespace SalonSpaBookingSystem.DTO
         [Required]
         public string BookingId { get; set; }
 
-        public DateTime? BookingDate { get; set; }
+        public DateOnly? BookingDate { get; set; }
 
-        public DateTime? BookingTime { get; set; }
+        public TimeSpan? BookingTime { get; set; }
 
         public decimal? TotalPrice { get; set; }
 
