@@ -4,6 +4,7 @@ using SalonSpaBookingSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using SalonSpaBookingSystem.Interfaces.IServices;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace SalonSpaBookingSystem.Controllers
 {
@@ -19,11 +20,17 @@ namespace SalonSpaBookingSystem.Controllers
             _userProfileService = userProfileService;
         }
 
-        [HttpGet("profile/{userId}", Name = "GetUserProfile")]
-        public async Task<IActionResult> GetUserProfileByUserId(string userId)
+        [HttpGet("profile", Name = "GetUserProfileByUserID")]
+        public async Task<IActionResult> GetUserProfileByUserId()
         {
             try
             {
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized(new GeneralResposnseDTO(false, "User not authenticated"));
+                }
+
                 var userProfile = await _userProfileService.GetUserProfileByUserId(userId);
                 if (userProfile.Status)
                 {
@@ -44,7 +51,13 @@ namespace SalonSpaBookingSystem.Controllers
         {
             try
             {
-                var userProfileResult = await _userProfileService.UserProfileExist(request.UserId);                
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized(new GeneralResposnseDTO(false, "User not authenticated"));
+                }
+
+                var userProfileResult = await _userProfileService.UserProfileExist(userId);                
                 UserProfileModel userProfile;
                 GeneralResponseInternalDTO result;
 
@@ -54,7 +67,7 @@ namespace SalonSpaBookingSystem.Controllers
                     userProfile = new UserProfileModel
                     {
                         UserProfileId = Guid.NewGuid().ToString(),
-                        UserId = request.UserId,
+                        UserId = userId,
                         Address = request.Address,
                         City = request.City,
                         State = request.State,

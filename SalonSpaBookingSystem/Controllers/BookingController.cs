@@ -181,11 +181,17 @@ namespace SalonSpaBookingSystem.Controllers
             }
         }
 
-        [HttpGet("get-bookings/{userId}", Name = "GetBookingByUserId")]
-        public async Task<IActionResult> FetchBookingByUserId(string userId)
+        [HttpGet("get-bookings-by-user", Name = "GetBookingByUserId")]
+        public async Task<IActionResult> FetchBookingByUserId()
         {
             try
             {
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Unauthorized(new GeneralResposnseDTO(false, "User not authenticated"));
+                }
+
                 var result = await _bookingService.FetchBookingsByUserId(userId);
                 if (!result.Status)
                 {
