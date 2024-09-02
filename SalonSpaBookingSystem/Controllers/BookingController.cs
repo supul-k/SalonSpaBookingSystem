@@ -97,7 +97,7 @@ namespace SalonSpaBookingSystem.Controllers
 
                 BookingModel booking = bookingResult.Data as BookingModel;
                 if (request.BookingDate.HasValue) booking.BookingDate = request.BookingDate.Value;
-                if (request.BookingTime.HasValue) booking.BookingTime =request.BookingTime.Value;
+                if (request.BookingTime.HasValue) booking.BookingTime = request.BookingTime.Value;
                 if (!string.IsNullOrEmpty(request.Status)) booking.Status = request.Status;
                 if (request.TotalPrice.HasValue) booking.TotalPrice = request.TotalPrice.Value;
                 booking.UpdatedAt = DateTime.UtcNow;
